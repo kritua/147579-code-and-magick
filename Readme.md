@@ -1,7 +1,7 @@
 # Личный проект «Код и Магия» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Никита Брежнев](https://up.htmlacademy.ru/javascript/6/user/147579).
-* Наставник: `Неизвестно`.
+* Наставник: `Александр Духовняк`.
 
 ---
 
