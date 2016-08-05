@@ -8,7 +8,8 @@ function getMessage (a, b) {
         }
     }
     if (typeof a === 'number') {
-        return  "Я прыгнул на " + a * 100 + " сантиметров";
+        var jumpHeightInCM = a * 100;
+        return  "Я прыгнул на " + jumpHeightInCM + " сантиметров";
     }
 
     if (Array.isArray(a) && !Array.isArray(b)) {
