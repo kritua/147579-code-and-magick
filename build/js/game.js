@@ -444,7 +444,7 @@ window.Game = (function() {
 
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          text = 'Вы - сейчас поджарили чью-то шкуру. Игры с огнём опасны. По возможности, жарьте больше злодеев и негодяев. Пробел чтобы сыграть ещё раз';
+          text = 'Вы сейчас поджарили чью-то шкуру. Игры с огнём опасны. По возможности, жарьте больше злодеев и негодяев. Пробел чтобы сыграть ещё раз';
           splitText(canvasFigure, text, positionLeft, positionTop, maxWidth, lineHeight);
           break;
         case Verdict.FAIL:
