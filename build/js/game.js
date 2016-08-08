@@ -395,118 +395,69 @@ window.Game = (function() {
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      var canvasFigure = this.ctx;
+      canvasFigure.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      canvasFigure.beginPath();
+      canvasFigure.moveTo(315, 205);
+      canvasFigure.lineTo(335, 55);
+      canvasFigure.lineTo(655, 55);
+      canvasFigure.lineTo(655, 160);
+      canvasFigure.lineTo(345, 180);
+      canvasFigure.closePath();
+      canvasFigure.fill();
+      canvasFigure.fillStyle = 'white';
+      canvasFigure.beginPath();
+      canvasFigure.moveTo(310, 200);
+      canvasFigure.lineTo(330, 50);
+      canvasFigure.lineTo(650, 50);
+      canvasFigure.lineTo(650, 155);
+      canvasFigure.lineTo(340, 175);
+      canvasFigure.closePath();
+      canvasFigure.fill();
+      canvasFigure.stroke();
+      canvasFigure.fillStyle = 'black';
+      canvasFigure.font = '16px PT Mono';
+
+      var splitText = function(canvasText, text, positionLeft, positionTop, maxWidth, lineHeight) {
+        var newLine = '';
+        var textToSplit = text.split(' ');
+        textToSplit.forEach(function(item) {
+          var textLine = newLine + item + ' ';
+          var textWidth = canvasText.measureText(textLine).width;
+          if (textWidth > maxWidth) {
+            canvasText.fillText(newLine, positionLeft, positionTop);
+            newLine = item + ' ';
+            positionTop += lineHeight;
+          } else {
+            newLine = textLine;
+          }
+        });
+        canvasText.fillText(newLine, positionLeft, positionTop);
+      };
+
+      var maxWidth = 320;
+      var lineHeight = 20;
+      var positionTop = 70;
+      var positionLeft = 335;
+      var text = ' ';
+
+
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-          this.ctx.beginPath();
-          this.ctx.moveTo(315, 205);
-          this.ctx.lineTo(335, 55);
-          this.ctx.lineTo(655, 55);
-          this.ctx.lineTo(655, 160);
-          this.ctx.lineTo(345, 180);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.fillStyle = 'white';
-          this.ctx.beginPath();
-          this.ctx.moveTo(310, 200);
-          this.ctx.lineTo(330, 50);
-          this.ctx.lineTo(650, 50);
-          this.ctx.lineTo(650, 155);
-          this.ctx.lineTo(340, 175);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.stroke();
-          this.ctx.fillStyle = 'black';
-          this.ctx.font = '16px PT Mono';
-          this.ctx.fillText('Вы сейчас поджарили чью-то', 350, 70);
-          this.ctx.fillText('шкуру. Игры с огнём опасны.', 350, 90);
-          this.ctx.fillText('По возможности, жарьте', 350, 110);
-          this.ctx.fillText('больше злодеев и негодяев.', 350, 130);
-          this.ctx.fillText('"Пробел" чтобы сыграть ещё раз', 350, 150);
-          console.log('you have won!');
+          text = 'Вы сейчас поджарили чью-то шкуру. Игры с огнём опасны. По возможности, жарьте больше злодеев и негодяев. Пробел чтобы сыграть ещё раз';
+          splitText(canvasFigure, text, positionLeft, positionTop, maxWidth, lineHeight);
           break;
         case Verdict.FAIL:
-          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-          this.ctx.beginPath();
-          this.ctx.moveTo(315, 205);
-          this.ctx.lineTo(335, 55);
-          this.ctx.lineTo(655, 55);
-          this.ctx.lineTo(655, 160);
-          this.ctx.lineTo(345, 180);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.fillStyle = 'white';
-          this.ctx.beginPath();
-          this.ctx.moveTo(310, 200);
-          this.ctx.lineTo(330, 50);
-          this.ctx.lineTo(650, 50);
-          this.ctx.lineTo(650, 155);
-          this.ctx.lineTo(340, 175);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.stroke();
-          this.ctx.fillStyle = 'black';
-          this.ctx.font = '16px PT Mono';
-          this.ctx.fillText('Вы ни на что не способны', 350, 70);
-          this.ctx.fillText('Просто смиритесь. Ни на что.', 350, 90);
-          this.ctx.fillText('Но вы можете попробовать ещё раз', 350, 110);
-          this.ctx.fillText('Просто нажмите "Пробел"', 350, 130);
-          console.log('you have failed!');
+          text = 'Вы ни на что не способны. Просто смиритесь. Ни на что. Но вы можете попробовать ещё раз. Просто нажмите "Пробел"';
+          splitText(canvasFigure, text, positionLeft, positionTop, maxWidth, lineHeight);
           break;
         case Verdict.PAUSE:
-          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-          this.ctx.beginPath();
-          this.ctx.moveTo(315, 205);
-          this.ctx.lineTo(335, 55);
-          this.ctx.lineTo(655, 55);
-          this.ctx.lineTo(655, 160);
-          this.ctx.lineTo(345, 180);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.fillStyle = 'white';
-          this.ctx.beginPath();
-          this.ctx.moveTo(310, 200);
-          this.ctx.lineTo(330, 50);
-          this.ctx.lineTo(650, 50);
-          this.ctx.lineTo(650, 155);
-          this.ctx.lineTo(340, 175);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.stroke();
-          this.ctx.fillStyle = 'black';
-          this.ctx.font = '16px PT Mono';
-          this.ctx.fillText('Игра на паузе', 350, 90);
-          this.ctx.fillText('Нажми "Пробел" для старта.', 350, 110);
-          console.log('game is on pause!');
+          text = 'Игра на паузе. Нажми "Пробел" для старта.';
+          splitText(canvasFigure, text, positionLeft, positionTop, maxWidth, lineHeight);
           break;
         case Verdict.INTRO:
-          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-          this.ctx.beginPath();
-          this.ctx.moveTo(315, 205);
-          this.ctx.lineTo(335, 55);
-          this.ctx.lineTo(675, 55);
-          this.ctx.lineTo(675, 160);
-          this.ctx.lineTo(345, 180);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.fillStyle = 'white';
-          this.ctx.beginPath();
-          this.ctx.moveTo(310, 200);
-          this.ctx.lineTo(330, 50);
-          this.ctx.lineTo(670, 50);
-          this.ctx.lineTo(670, 155);
-          this.ctx.lineTo(340, 175);
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.stroke();
-          this.ctx.fillStyle = 'black';
-          this.ctx.font = '16px PT Mono';
-          this.ctx.fillText('Игра про мага, который там короче', 340, 70);
-          this.ctx.fillText('ходит и все такое в общем.', 340, 90);
-          this.ctx.fillText('Нажми "Пробел" для старта.', 340, 110);
-          this.ctx.fillText('Стрелки для управления и прыжка.', 340, 130);
-          this.ctx.fillText('"Shift" для запуска фаерболла.', 340, 150);
-          console.log('welcome to the game! Press Space to start');
+          text = 'Игра про мага, который там короче ходит и все такое в общем. Нажми "Пробел" для старта, "Стрелки" для управления и прыжка, "Shift" для фаербола';
+          splitText(canvasFigure, text, positionLeft, positionTop, maxWidth, lineHeight);
           break;
       }
     },
