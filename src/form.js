@@ -32,3 +32,27 @@ window.form = (function() {
 
   return form;
 })();
+
+var name = document.querySelector('#review-name');
+var text = document.querySelector('#review-text');
+var stars = document.getElementsByName('review-mark');
+var value = document.getElementsByName('review-mark').value;
+var submitButton = document.querySelector('.review-submit');
+
+
+name.required = true;
+
+if (name.length < 0 || text.value == '') {
+  submitButton.disabled = true;
+}
+
+name.onchange = function() {
+  submitButton.disabled = false;
+};
+
+
+  if (value < 3) {
+    text.required = true;
+  }
+
+

@@ -111,6 +111,30 @@
 	
 	  return form;
 	})();
+	
+	var name = document.querySelector('#review-name');
+	var text = document.querySelector('#review-text');
+	var stars = document.getElementsByName('review-mark');
+	var value = document.getElementsByName('review-mark').value;
+	var submitButton = document.querySelector('.review-submit');
+	
+	
+	name.required = true;
+	
+	if (name.length < 0 || text.value == '') {
+	  submitButton.disabled = true;
+	}
+	
+	name.onchange = function() {
+	  submitButton.disabled = false;
+	};
+	
+	
+	  if (value < 3) {
+	    text.required = true;
+	  }
+	
+	
 
 
 /***/ },
@@ -542,7 +566,6 @@
 	          this.ctx.fillText('По возможности, жарьте', 350, 110);
 	          this.ctx.fillText('больше злодеев и негодяев.', 350, 130);
 	          this.ctx.fillText('"Пробел" чтобы сыграть ещё раз', 350, 150);
-	          console.log('you have won!');
 	          break;
 	        case Verdict.FAIL:
 	          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -570,7 +593,6 @@
 	          this.ctx.fillText('Просто смиритесь. Ни на что.', 350, 90);
 	          this.ctx.fillText('Но вы можете попробовать ещё раз', 350, 110);
 	          this.ctx.fillText('Просто нажмите "Пробел"', 350, 130);
-	          console.log('you have failed!');
 	          break;
 	        case Verdict.PAUSE:
 	          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -596,7 +618,6 @@
 	          this.ctx.font = '16px PT Mono';
 	          this.ctx.fillText('Игра на паузе', 350, 90);
 	          this.ctx.fillText('Нажми "Пробел" для старта.', 350, 110);
-	          console.log('game is on pause!');
 	          break;
 	        case Verdict.INTRO:
 	          this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -625,7 +646,6 @@
 	          this.ctx.fillText('Нажми "Пробел" для старта.', 340, 110);
 	          this.ctx.fillText('Стрелки для управления и прыжка.', 340, 130);
 	          this.ctx.fillText('"Shift" для запуска фаерболла.', 340, 150);
-	          console.log('welcome to the game! Press Space to start');
 	          break;
 	      }
 	    },
