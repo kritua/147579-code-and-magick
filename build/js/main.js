@@ -125,45 +125,43 @@
 	  var button = form.elements[c];
 	  button.disabled = true;
 	  a.oninput = function() {
-	    if (b.value != '') {
+	    if (b.value !== '') {
 	      button.disabled = false;
-	    }
-	    else {
+	    } else {
 	      button.disabled = true;
 	    }
-	  }
+	  };
 	}
 	
 	
 	function reviewLabelHide1(a, b, c, d) {
 	  var elemOne = document.querySelector(c);
 	  var elemTwo = document.querySelector(d);
-	    if (a.value != '') {
-	      elemOne.style.visibility = 'hidden';
-	    }
-	    else {
-	      elemOne.style.visibility = 'visible';
-	    }
-	    if (a.value != '' && b.value != '') {
-	      elemTwo.style.visibility = 'hidden';
-	    }
-	    else {
-	      elemTwo.style.visibility = 'visible';
-	    }
+	  if (a.value !== '') {
+	    elemOne.style.visibility = 'hidden';
+	  } else {
+	    elemOne.style.visibility = 'visible';
+	  }
+	  if (a.value !== '' && b.value !== '') {
+	    elemTwo.style.visibility = 'hidden';
+	  } else {
+	    elemTwo.style.visibility = 'visible';
+	  }
 	}
 	
 	function starsRatingCheck(a) {
 	  var stars = document.querySelectorAll(a);
-	  for (var i = 0; i < stars.length; i++) (function(i) {
-	    stars[i].onclick = function() {
-	      if (stars[i].previousSibling.value < 3) {
-	        text.required = true;
-	      }
-	      else {
-	        text.required = false;
-	      }
-	    };
-	  })(i);
+	  for (var i = 0; i < stars.length; i++) {
+	    (function(y) {
+	      stars[y].onclick = function() {
+	        if (stars[y].previousSibling.value < 3) {
+	          text.required = true;
+	        } else {
+	          text.required = false;
+	        }
+	      };
+	    })(i);
+	  }
 	}
 	
 	starsRatingCheck('.review-mark-label');
@@ -182,7 +180,22 @@
 	
 	//Old code
 	
-	/* var name = document.querySelector('#review-name');
+	/*
+	
+	 function starsRatingCheck(a) {
+	 var stars = document.querySelectorAll(a);
+	 for (var i = 0; i < stars.length; i++) (function(i) {
+	 stars[i].onclick = function() {
+	 if (stars[i].previousSibling.value < 3) {
+	 text.required = true;
+	 } else {
+	 text.required = false;
+	 }
+	 };
+	 })(i);
+	 }
+	
+	var name = document.querySelector('#review-name');
 	 var text = document.querySelector('#review-text');
 	 var stars = document.querySelectorAll('.review-mark-label');
 	 var nameLabel = document.querySelector('.review-fields-label');
@@ -236,7 +249,7 @@
 	
 	
 	
-	//first try of this stupid function 
+	//first try of this stupid function
 	/*
 	 function reviewLabelHide(a, b, c) {
 	 var nameLabel = document.querySelector('.review-fields-name');
