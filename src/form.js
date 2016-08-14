@@ -98,111 +98,28 @@ text.oninput = function() {
 submitButtonManipulation(form, name, 10);
 
 
+var browserCookies = require('browser-cookies');
 
-//Old code
+function ratingCheck() {
+  var starsCheck = document.querySelectorAll('.review-mark-label');
+  for (var i = 0; i < starsCheck.length; i++) {
+    (function(y) {
+      starsCheck[y].onclick = function() {
+        return starsCheck[y].previousSibling.value;
+    }
+  })(i);
+  }
+  return starsCheck;
+}
 
-/*
-
- function starsRatingCheck(a) {
- var stars = document.querySelectorAll(a);
- for (var i = 0; i < stars.length; i++) (function(i) {
- stars[i].onclick = function() {
- if (stars[i].previousSibling.value < 3) {
- text.required = true;
- } else {
- text.required = false;
- }
- };
- })(i);
- }
-
-var name = document.querySelector('#review-name');
- var text = document.querySelector('#review-text');
- var stars = document.querySelectorAll('.review-mark-label');
- var nameLabel = document.querySelector('.review-fields-label');
- var textLabel = document.querySelector('.review-fields-text');
- var submitButton = document.querySelector('.review-submit');
- var reviewField = document.querySelector('.review-fields');
- var reviewForm = document.querySelector('.review-form');
-
-
- for (var i = 0; i < stars.length; i++) (function(i) {
- stars[i].onclick = function() {
- if (stars[i].previousSibling.value <= 2) {
- text.required = true;
- }
- else {
- text.required = false;
- }
- };
- })(i);
-
- name.required = 'true';
-
- if (name.value <= 0 || text.value == '') {
- submitButton.disabled = true;
- }
-
- reviewForm.oninput = function() {
- if (name.value != 0) {
- nameLabel.style.visibility = 'hidden';
- submitButton.disabled = false;
- }
- else {
- nameLabel.style.visibility = 'visible';
- submitButton.disabled = true;
- }
-
- if (text.value != '') {
- textLabel.style.visibility = 'hidden';
- }
- else {
- textLabel.style.visibility = 'visible';
- }
- if (text.value != '' && name.value != 0) {
- reviewField.style.visibility = 'hidden';
- }
- else {
- reviewField.style.visibility = 'visible';
- }
- }; */
+console.log(ratingCheck());
 
 
 
-
-//first try of this stupid function
-/*
- function reviewLabelHide(a, b, c) {
- var nameLabel = document.querySelector('.review-fields-name');
- var textLabel = document.querySelector('.review-fields-text');
- var reviewField = document.querySelector('.review-fields');
- a.oninput = function() {
- if (b.value != '') {
- nameLabel.style.visibility = 'hidden';
- }
- else {
- nameLabel.style.visibility = 'visible';
- }
- if (c.value != '') {
- nameLabel.style.visibility = 'hidden';
- }
- else {
- nameLabel.style.visibility = 'visible';
- }
- if (b.value != '' && c.value != '') {
- reviewField.style.visibility = 'hidden';
- }
- else {
- reviewField.style.visibility = 'visible';
- }
- }
- } */
-
-
-
-/* for (var i = 0; i < form.length; i++) {
-  console.log(i, form.elements[i]);
-} */
-
+form.onsubmit = function() {
+  browserCookies.set('review-name', name.value);
+  browserCookies.set('review-mark', ratingCheck());
+  alert(document.cookie);
+};
 
 

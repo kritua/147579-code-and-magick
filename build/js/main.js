@@ -48,7 +48,7 @@
 	
 	
 	__webpack_require__(1);
-	__webpack_require__(2);
+	__webpack_require__(3);
 	
 	(function() {
 	  var game = new window.Game(document.querySelector('.demo'));
@@ -75,7 +75,7 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -177,118 +177,108 @@
 	submitButtonManipulation(form, name, 10);
 	
 	
+	var browserCookies = __webpack_require__(2);
 	
-	//Old code
+	function ratingCheck() {
+	  var starsCheck = document.querySelectorAll('.review-mark-label');
+	  for (var i = 0; i < starsCheck.length; i++) {
+	    (function(y) {
+	      starsCheck[y].onclick = function() {
+	        return starsCheck[y].previousSibling.value;
+	    }
+	  })(i);
+	  }
+	  return starsCheck.value;
+	}
 	
-	/*
-	
-	 function starsRatingCheck(a) {
-	 var stars = document.querySelectorAll(a);
-	 for (var i = 0; i < stars.length; i++) (function(i) {
-	 stars[i].onclick = function() {
-	 if (stars[i].previousSibling.value < 3) {
-	 text.required = true;
-	 } else {
-	 text.required = false;
-	 }
-	 };
-	 })(i);
-	 }
-	
-	var name = document.querySelector('#review-name');
-	 var text = document.querySelector('#review-text');
-	 var stars = document.querySelectorAll('.review-mark-label');
-	 var nameLabel = document.querySelector('.review-fields-label');
-	 var textLabel = document.querySelector('.review-fields-text');
-	 var submitButton = document.querySelector('.review-submit');
-	 var reviewField = document.querySelector('.review-fields');
-	 var reviewForm = document.querySelector('.review-form');
-	
-	
-	 for (var i = 0; i < stars.length; i++) (function(i) {
-	 stars[i].onclick = function() {
-	 if (stars[i].previousSibling.value <= 2) {
-	 text.required = true;
-	 }
-	 else {
-	 text.required = false;
-	 }
-	 };
-	 })(i);
-	
-	 name.required = 'true';
-	
-	 if (name.value <= 0 || text.value == '') {
-	 submitButton.disabled = true;
-	 }
-	
-	 reviewForm.oninput = function() {
-	 if (name.value != 0) {
-	 nameLabel.style.visibility = 'hidden';
-	 submitButton.disabled = false;
-	 }
-	 else {
-	 nameLabel.style.visibility = 'visible';
-	 submitButton.disabled = true;
-	 }
-	
-	 if (text.value != '') {
-	 textLabel.style.visibility = 'hidden';
-	 }
-	 else {
-	 textLabel.style.visibility = 'visible';
-	 }
-	 if (text.value != '' && name.value != 0) {
-	 reviewField.style.visibility = 'hidden';
-	 }
-	 else {
-	 reviewField.style.visibility = 'visible';
-	 }
-	 }; */
+	console.log(ratingCheck());
 	
 	
 	
-	
-	//first try of this stupid function
-	/*
-	 function reviewLabelHide(a, b, c) {
-	 var nameLabel = document.querySelector('.review-fields-name');
-	 var textLabel = document.querySelector('.review-fields-text');
-	 var reviewField = document.querySelector('.review-fields');
-	 a.oninput = function() {
-	 if (b.value != '') {
-	 nameLabel.style.visibility = 'hidden';
-	 }
-	 else {
-	 nameLabel.style.visibility = 'visible';
-	 }
-	 if (c.value != '') {
-	 nameLabel.style.visibility = 'hidden';
-	 }
-	 else {
-	 nameLabel.style.visibility = 'visible';
-	 }
-	 if (b.value != '' && c.value != '') {
-	 reviewField.style.visibility = 'hidden';
-	 }
-	 else {
-	 reviewField.style.visibility = 'visible';
-	 }
-	 }
-	 } */
-	
-	
-	
-	/* for (var i = 0; i < form.length; i++) {
-	  console.log(i, form.elements[i]);
-	} */
-	
+	form.onsubmit = function() {
+	  browserCookies.set('review-name', name.value);
+	  browserCookies.set('review-mark', ratingCheck());
+	  alert(document.cookie);
+	};
 	
 	
 
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	exports.defaults = {};
+	
+	exports.set = function(name, value, options) {
+	  // Retrieve options and defaults
+	  var opts = options || {};
+	  var defaults = exports.defaults;
+	
+	  // Apply default value for unspecified options
+	  var expires  = opts.expires || defaults.expires;
+	  var domain   = opts.domain  || defaults.domain;
+	  var path     = opts.path     != undefined ? opts.path     : (defaults.path != undefined ? defaults.path : '/');
+	  var secure   = opts.secure   != undefined ? opts.secure   : defaults.secure;
+	  var httponly = opts.httponly != undefined ? opts.httponly : defaults.httponly;
+	
+	  // Determine cookie expiration date
+	  // If succesful the result will be a valid Date, otherwise it will be an invalid Date or false(ish)
+	  var expDate = expires ? new Date(
+	      // in case expires is an integer, it should specify the number of days till the cookie expires
+	      typeof expires == 'number' ? new Date().getTime() + (expires * 864e5) :
+	      // else expires should be either a Date object or in a format recognized by Date.parse()
+	      expires
+	  ) : '';
+	
+	  // Set cookie
+	  document.cookie = name.replace(/[^+#$&^`|]/g, encodeURIComponent)                // Encode cookie name
+	  .replace('(', '%28')
+	  .replace(')', '%29') +
+	  '=' + value.replace(/[^+#$&/:<-\[\]-}]/g, encodeURIComponent) +                  // Encode cookie value (RFC6265)
+	  (expDate && expDate.getTime() >= 0 ? ';expires=' + expDate.toUTCString() : '') + // Add expiration date
+	  (domain   ? ';domain=' + domain : '') +                                          // Add domain
+	  (path     ? ';path='   + path   : '') +                                          // Add path
+	  (secure   ? ';secure'           : '') +                                          // Add secure option
+	  (httponly ? ';httponly'         : '');                                           // Add httponly option
+	};
+	
+	exports.get = function(name) {
+	  var cookies = document.cookie.split(';');
+	
+	  // Iterate all cookies
+	  for(var i = 0; i < cookies.length; i++) {
+	    var cookie = cookies[i];
+	    var cookieLength = cookie.length;
+	
+	    // Determine separator index ("name=value")
+	    var separatorIndex = cookie.indexOf('=');
+	
+	    // IE<11 emits the equal sign when the cookie value is empty
+	    separatorIndex = separatorIndex < 0 ? cookieLength : separatorIndex;
+	
+	    // Decode the cookie name and remove any leading/trailing spaces, then compare to the requested cookie name
+	    if (decodeURIComponent(cookie.substring(0, separatorIndex).replace(/^\s+|\s+$/g, '')) == name) {
+	      return decodeURIComponent(cookie.substring(separatorIndex + 1, cookieLength));
+	    }
+	  }
+	
+	  return null;
+	};
+	
+	exports.erase = function(name, options) {
+	  exports.set(name, '', {
+	    expires:  -1,
+	    domain:   options && options.domain,
+	    path:     options && options.path,
+	    secure:   0,
+	    httponly: 0}
+	  );
+	};
+
+
+/***/ },
+/* 3 */
 /***/ function(module, exports) {
 
 	'use strict';
