@@ -99,27 +99,59 @@ submitButtonManipulation(form, name, 10);
 
 
 var browserCookies = require('browser-cookies');
+var totalDays = '';
+var totalStars = document.getElementById('#review-mark-3').value;
+var starsCheck = document.querySelectorAll('.review-mark-label');
 
-function ratingCheck() {
-  var starsCheck = document.querySelectorAll('.review-mark-label');
+console.log(totalStars);
+
+function starsCookie() {
   for (var i = 0; i < starsCheck.length; i++) {
-    (function(y) {
-      starsCheck[y].onclick = function() {
-        return starsCheck[y].previousSibling.value;
-    }
-  })(i);
+    (function (y) {
+          starsCheck[y].onclick = function () {
+              totalStars = starsCheck[y].previousSibling.value;
+          }
+        })(i);
   }
-  return starsCheck;
 }
 
-console.log(ratingCheck());
+/*
+ for (var i = 0; i < starsCheck.length; i++) {
+ (function(y) {
+ starsCheck[y].onclick = function() {
+ form.onsubmit = function() {
+ browserCookies.set('review-mark', starsCheck[y].previousSibling.value);
+ }
+ }
+ }
+ )(i);
+ }
+*/
 
+function cookieValueGrace(a) {
+  var msecondsPerDay = 24 * 60 * 60 * 1000;
+  var currentDate = new Date();
+  var yearOfCount = '';
+  var lastBirthDayDate = new Date(currentDate.getFullYear() - 1, 11, 9);
+  a = Math.round((currentDate - lastBirthDayDate) / msecondsPerDay);
+  if (a <= 365) {
+    yearOfCount = currentDate.getFullYear() - 1;
+  } else {
+    yearOfCount = currentDate.getFullYear();
+  }
+  var lastBirthDay = new Date(yearOfCount, 11, 9);
+  return a;
+}
+cookieValueGrace(totalDays);
+starsCookie();
 
-
-form.onsubmit = function() {
-  browserCookies.set('review-name', name.value);
-  browserCookies.set('review-mark', ratingCheck());
+form.onsubmit = function () {
+  browserCookies.set('review-name', name.value, {expires: (cookieValueGrace(totalDays))});
+  browserCookies.set('review-mark', totalStars);
   alert(document.cookie);
 };
+
+
+
 
 
