@@ -46,11 +46,7 @@ function submitButtonManipulation(a, b, c) {
   var button = form.elements[c];
   button.disabled = true;
   a.oninput = function() {
-    if (b.value !== '') {
-      button.disabled = false;
-    } else {
-      button.disabled = true;
-    }
+    button.disabled = (b.value === '');
   };
 }
 
@@ -75,11 +71,7 @@ function starsRatingCheck(a) {
   for (var i = 0; i < stars.length; i++) {
     (function(y) {
       stars[y].onclick = function() {
-        if (stars[y].previousSibling.value < 3) {
-          text.required = true;
-        } else {
-          text.required = false;
-        }
+        text.required = (stars[y].previousSibling.value < 3);
       };
     })(i);
   }
@@ -100,22 +92,37 @@ submitButtonManipulation(form, name, 10);
 
 var browserCookies = require('browser-cookies');
 var totalDays = '';
-var totalStars = document.getElementById('#review-mark-3').value;
 var starsCheck = document.querySelectorAll('.review-mark-label');
+var totalStars = starsCheck[3].previousSibling.value;
 
+console.log(starsCheck[3].previousSibling.value);
 console.log(totalStars);
 
 function starsCookie() {
   for (var i = 0; i < starsCheck.length; i++) {
-    (function (y) {
-          starsCheck[y].onclick = function () {
-              totalStars = starsCheck[y].previousSibling.value;
-          }
+        (starsCheck[i].onclick = function(y) {
+          totalStars = starsCheck[y].previousSibling.value;
         })(i);
   }
 }
 
+
 /*
+
+ function starsCookie() {
+ for (var i = 0; i < starsCheck.length; i++) {
+ (function(y) {
+ starsCheck[y].onclick = function() {
+ if (starsCheck[y].onclick === null) {
+ totalStars = 3;
+ } else {
+ totalStars = starsCheck[y].previousSibling.value;
+ }
+ };
+ })(i);
+ }
+ }
+
  for (var i = 0; i < starsCheck.length; i++) {
  (function(y) {
  starsCheck[y].onclick = function() {
@@ -133,20 +140,23 @@ function cookieValueGrace(a) {
   var currentDate = new Date();
   var yearOfCount = '';
   var lastBirthDayDate = new Date(currentDate.getFullYear() - 1, 11, 9);
-  a = Math.round((currentDate - lastBirthDayDate) / msecondsPerDay);
   if (a <= 365) {
     yearOfCount = currentDate.getFullYear() - 1;
   } else {
     yearOfCount = currentDate.getFullYear();
   }
   var lastBirthDay = new Date(yearOfCount, 11, 9);
+  a = Math.round((currentDate - lastBirthDay) / msecondsPerDay);
   return a;
 }
 cookieValueGrace(totalDays);
 starsCookie();
+console.log(totalStars);
+console.log(cookieValueGrace(totalDays));
 
-form.onsubmit = function () {
-  browserCookies.set('review-name', name.value, {expires: (cookieValueGrace(totalDays))});
+console.log(totalDays);
+form.onsubmit = function() {
+  browserCookies.set('review-name', name.value, {expires: cookieValueGrace(totalDays)});
   browserCookies.set('review-mark', totalStars);
   alert(document.cookie);
 };
