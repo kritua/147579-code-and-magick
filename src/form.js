@@ -3,6 +3,34 @@
 window.form = (function() {
   var formContainer = document.querySelector('.overlay-container');
   var formCloseButton = document.querySelector('.review-form-close');
+  var formOverlay = document.querySelector('.review-form');
+  var name = formOverlay.elements['review-name'];
+  var text = formOverlay.elements['review-text'];
+  var stars = formOverlay.elements['review-mark'];
+  var submitButton = document.querySelector('.review-submit');
+
+  name.required = true;
+  submitButton.disabled = true;
+  //text.required = (stars.value < 3);
+
+  formOverlay.onchange = formValidation;
+
+  function formValidation() {
+    submitButton.disabled = !validation();
+  }
+
+  function validation() {
+    text.required = (stars.value < 3);
+    var nameValidation = (name.value !== '');
+    var textValidation = (text.value !== '');
+    
+    
+    return nameValidation && textValidation;
+  }
+  console.log(formValidation());
+  console.log(validation());
+  console.log(stars.value);
+  
 
   var form = {
     onClose: null,
@@ -34,7 +62,7 @@ window.form = (function() {
 })();
 
 /* Refactoring */
-
+/*
 var form = document.forms[1];
 var name = form.elements['review-name'];
 var text = form.elements['review-text'];
@@ -90,38 +118,28 @@ text.oninput = function() {
 submitButtonManipulation(form, name, 10);
 
 
-var browserCookies = require('browser-cookies');
-var totalDays = '';
-var starsCheck = document.querySelectorAll('.review-mark-label');
-var totalStars = starsCheck[3].previousSibling.value;
 
 console.log(starsCheck[3].previousSibling.value);
 console.log(totalStars);
 
 function starsCookie() {
   for (var i = 0; i < starsCheck.length; i++) {
-        (starsCheck[i].onclick = function(y) {
+    (function(y) {
+      starsCheck[y].onclick = function() {
+        if (starsCheck[y].onclick === null) {
+          totalStars = 3;
+        } else {
           totalStars = starsCheck[y].previousSibling.value;
-        })(i);
+        }
+      };
+    })(i);
   }
 }
 
 
 /*
 
- function starsCookie() {
- for (var i = 0; i < starsCheck.length; i++) {
- (function(y) {
- starsCheck[y].onclick = function() {
- if (starsCheck[y].onclick === null) {
- totalStars = 3;
- } else {
- totalStars = starsCheck[y].previousSibling.value;
- }
- };
- })(i);
- }
- }
+
 
  for (var i = 0; i < starsCheck.length; i++) {
  (function(y) {
@@ -134,6 +152,10 @@ function starsCookie() {
  )(i);
  }
 */
+/* var browserCookies = require('browser-cookies');
+var totalDays = '';
+var starsCheck = document.querySelectorAll('.review-mark-label');
+var totalStars = starsCheck[3].previousSibling.value;
 
 function cookieValueGrace(a) {
   var msecondsPerDay = 24 * 60 * 60 * 1000;
@@ -150,7 +172,6 @@ function cookieValueGrace(a) {
   return a;
 }
 cookieValueGrace(totalDays);
-starsCookie();
 console.log(totalStars);
 console.log(cookieValueGrace(totalDays));
 
@@ -159,7 +180,7 @@ form.onsubmit = function() {
   browserCookies.set('review-name', name.value, {expires: cookieValueGrace(totalDays)});
   browserCookies.set('review-mark', totalStars);
   alert(document.cookie);
-};
+}; */
 
 
 
