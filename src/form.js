@@ -14,7 +14,7 @@ window.form = (function() {
   var bothLabelFields = document.querySelector('.review-fields');
   /* Cookies variables */
   var cookies = require('browser-cookies');
-  var totalDays = '';
+
 
   name.required = true;
   submitButton.disabled = true;
@@ -23,6 +23,7 @@ window.form = (function() {
 
   function formValidation() {
     submitButton.disabled = !validation();
+    SaveCookies();
   }
 
   function validation() {
@@ -48,8 +49,7 @@ window.form = (function() {
     var yearOfCount = '';
     var lastBirthDayDate = new Date(currentDate.getFullYear() - 1, 11, 9);
     var lastBirthDay;
-
-    cookies.defaults.expires = totalDays;
+    var totalDays;
 
     totalDays = Math.round((currentDate - lastBirthDayDate) / msecondsPerDay);
     if (totalDays <= 365) {
@@ -62,12 +62,19 @@ window.form = (function() {
     totalDays = Math.round((currentDate - lastBirthDay) / msecondsPerDay);
     return totalDays;
   }
-  cookieValueGrace();
 
-  formOverlay.onsubmit = function() {
-    cookies.set('review-name', name.value);
-    cookies.set('review-mark', stars.value);
-  };
+  function SaveCookies() {
+    var options = {
+      expires: cookieValueGrace()
+    };
+    cookies.set('review-name', name.value, options);
+    cookies.set('review-mark', stars.value, options);
+  }
+
+  function GetCookies() {
+    name.value = cookies.get('review-name');
+    stars.value = cookies.get('review-mark');
+  }
 
 
   var form = {
@@ -79,8 +86,7 @@ window.form = (function() {
     open: function(cb) {
       formContainer.classList.remove('invisible');
       cb();
-      name.value = cookies.get('review-name');
-      stars.value = cookies.get('review-mark');
+      GetCookies();
     },
 
     close: function() {
