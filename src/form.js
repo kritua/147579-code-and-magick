@@ -3,6 +3,79 @@
 window.form = (function() {
   var formContainer = document.querySelector('.overlay-container');
   var formCloseButton = document.querySelector('.review-form-close');
+  /* Form Validation Variables */
+  var formOverlay = document.querySelector('.review-form');
+  var name = formOverlay.elements['review-name'];
+  var text = formOverlay.elements['review-text'];
+  var stars = formOverlay.elements['review-mark'];
+  var submitButton = document.querySelector('.review-submit');
+  var textReviewField = document.querySelector('.review-fields-text');
+  var nameReviewField = document.querySelector('.review-fields-name');
+  var bothLabelFields = document.querySelector('.review-fields');
+  /* Cookies variables */
+  var cookies = require('browser-cookies');
+
+
+  name.required = true;
+  submitButton.disabled = true;
+
+  formOverlay.onchange = formValidation;
+
+  function formValidation() {
+    submitButton.disabled = !validation();
+    saveCookies();
+  }
+
+  function validation() {
+    text.required = (stars.value < 3);
+    var nameValidation = (name.value !== '');
+    var textValidation = (text.value !== '') || (stars.value >= 3);
+
+    hideLabels(nameReviewField, !nameValidation);
+    hideLabels(textReviewField, !textValidation);
+    hideLabels(bothLabelFields, !nameValidation, !textValidation);
+    return nameValidation && textValidation;
+  }
+
+  function hideLabels(elem, attr, attr2) {
+    elem.classList.toggle('invisible', !attr && !attr2);
+  }
+
+
+
+  function cookieValueGrace() {
+    var msecondsPerDay = 24 * 60 * 60 * 1000;
+    var currentDate = new Date();
+    var yearOfCount = '';
+    var lastBirthDayDate = new Date(currentDate.getFullYear() - 1, 11, 9);
+    var lastBirthDay;
+    var totalDays;
+
+    totalDays = Math.round((currentDate - lastBirthDayDate) / msecondsPerDay);
+    if (totalDays <= 365) {
+      yearOfCount = currentDate.getFullYear() - 1;
+    } else {
+      yearOfCount = currentDate.getFullYear();
+    }
+
+    lastBirthDay = new Date(yearOfCount, 11, 9);
+    totalDays = Math.round((currentDate - lastBirthDay) / msecondsPerDay);
+    return totalDays;
+  }
+
+  function saveCookies() {
+    var options = {
+      expires: cookieValueGrace()
+    };
+    cookies.set('review-name', name.value, options);
+    cookies.set('review-mark', stars.value, options);
+  }
+
+  function getCookies() {
+    name.value = cookies.get('review-name');
+    stars.value = cookies.get('review-mark');
+  }
+
 
   var form = {
     onClose: null,
@@ -13,6 +86,7 @@ window.form = (function() {
     open: function(cb) {
       formContainer.classList.remove('invisible');
       cb();
+      getCookies();
     },
 
     close: function() {
@@ -33,176 +107,7 @@ window.form = (function() {
   return form;
 })();
 
-/* Refactoring */
 
-var form = document.forms[1];
-var name = form.elements['review-name'];
-var text = form.elements['review-text'];
-
-name.required = true;
-
-
-function submitButtonManipulation(a, b, c) {
-  var button = form.elements[c];
-  button.disabled = true;
-  a.oninput = function() {
-    if (b.value !== '') {
-      button.disabled = false;
-    } else {
-      button.disabled = true;
-    }
-  };
-}
-
-
-function reviewLabelHide1(a, b, c, d) {
-  var elemOne = document.querySelector(c);
-  var elemTwo = document.querySelector(d);
-  if (a.value !== '') {
-    elemOne.style.visibility = 'hidden';
-  } else {
-    elemOne.style.visibility = 'visible';
-  }
-  if (a.value !== '' && b.value !== '') {
-    elemTwo.style.visibility = 'hidden';
-  } else {
-    elemTwo.style.visibility = 'visible';
-  }
-}
-
-function starsRatingCheck(a) {
-  var stars = document.querySelectorAll(a);
-  for (var i = 0; i < stars.length; i++) {
-    (function(y) {
-      stars[y].onclick = function() {
-        if (stars[y].previousSibling.value < 3) {
-          text.required = true;
-        } else {
-          text.required = false;
-        }
-      };
-    })(i);
-  }
-}
-
-starsRatingCheck('.review-mark-label');
-
-name.oninput = function() {
-  reviewLabelHide1(name, text, '.review-fields-name', '.review-fields');
-};
-
-text.oninput = function() {
-  reviewLabelHide1(text, name, '.review-fields-text', '.review-fields');
-};
-
-submitButtonManipulation(form, name, 10);
-
-
-
-//Old code
-
-/*
-
- function starsRatingCheck(a) {
- var stars = document.querySelectorAll(a);
- for (var i = 0; i < stars.length; i++) (function(i) {
- stars[i].onclick = function() {
- if (stars[i].previousSibling.value < 3) {
- text.required = true;
- } else {
- text.required = false;
- }
- };
- })(i);
- }
-
-var name = document.querySelector('#review-name');
- var text = document.querySelector('#review-text');
- var stars = document.querySelectorAll('.review-mark-label');
- var nameLabel = document.querySelector('.review-fields-label');
- var textLabel = document.querySelector('.review-fields-text');
- var submitButton = document.querySelector('.review-submit');
- var reviewField = document.querySelector('.review-fields');
- var reviewForm = document.querySelector('.review-form');
-
-
- for (var i = 0; i < stars.length; i++) (function(i) {
- stars[i].onclick = function() {
- if (stars[i].previousSibling.value <= 2) {
- text.required = true;
- }
- else {
- text.required = false;
- }
- };
- })(i);
-
- name.required = 'true';
-
- if (name.value <= 0 || text.value == '') {
- submitButton.disabled = true;
- }
-
- reviewForm.oninput = function() {
- if (name.value != 0) {
- nameLabel.style.visibility = 'hidden';
- submitButton.disabled = false;
- }
- else {
- nameLabel.style.visibility = 'visible';
- submitButton.disabled = true;
- }
-
- if (text.value != '') {
- textLabel.style.visibility = 'hidden';
- }
- else {
- textLabel.style.visibility = 'visible';
- }
- if (text.value != '' && name.value != 0) {
- reviewField.style.visibility = 'hidden';
- }
- else {
- reviewField.style.visibility = 'visible';
- }
- }; */
-
-
-
-
-//first try of this stupid function
-/*
- function reviewLabelHide(a, b, c) {
- var nameLabel = document.querySelector('.review-fields-name');
- var textLabel = document.querySelector('.review-fields-text');
- var reviewField = document.querySelector('.review-fields');
- a.oninput = function() {
- if (b.value != '') {
- nameLabel.style.visibility = 'hidden';
- }
- else {
- nameLabel.style.visibility = 'visible';
- }
- if (c.value != '') {
- nameLabel.style.visibility = 'hidden';
- }
- else {
- nameLabel.style.visibility = 'visible';
- }
- if (b.value != '' && c.value != '') {
- reviewField.style.visibility = 'hidden';
- }
- else {
- reviewField.style.visibility = 'visible';
- }
- }
- } */
-
-
-
-/* for (var i = 0; i < form.length; i++) {
-  console.log(i, form.elements[i]);
-} */
 
 
 
