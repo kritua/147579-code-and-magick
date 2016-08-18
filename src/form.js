@@ -23,7 +23,7 @@ window.form = (function() {
 
   function formValidation() {
     submitButton.disabled = !validation();
-    SaveCookies();
+    saveCookies();
   }
 
   function validation() {
@@ -63,7 +63,7 @@ window.form = (function() {
     return totalDays;
   }
 
-  function SaveCookies() {
+  function saveCookies() {
     var options = {
       expires: cookieValueGrace()
     };
@@ -71,7 +71,7 @@ window.form = (function() {
     cookies.set('review-mark', stars.value, options);
   }
 
-  function GetCookies() {
+  function getCookies() {
     name.value = cookies.get('review-name');
     stars.value = cookies.get('review-mark');
   }
@@ -86,7 +86,7 @@ window.form = (function() {
     open: function(cb) {
       formContainer.classList.remove('invisible');
       cb();
-      GetCookies();
+      getCookies();
     },
 
     close: function() {
