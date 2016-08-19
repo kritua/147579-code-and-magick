@@ -12,7 +12,7 @@ function reviewsAdd(link, callback) {
   var callbackVar = 'callback' + String(Math.random()).slice(-6);
   var script = document.createElement('script');
 
-  link += link + 'callback=reviews.' + callbackVar;
+  link = link + '?callback=CallBackRegistry.' + callbackVar;
   window.CallBackRegistry[callbackVar] = function(data) {
     callback(data);
   };
@@ -33,3 +33,5 @@ function reviewData(data) {
 }
 
 reviewsAdd('http://localhost:1506/api/reviews', reviewData);
+
+console.log(reviews);
