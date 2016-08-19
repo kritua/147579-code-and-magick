@@ -34,4 +34,3 @@ function reviewData(data) {
 
 reviewsAdd('http://localhost:1506/api/reviews', reviewData);
 
-console.log(reviews);
