@@ -3,6 +3,9 @@
 
 require('./form');
 require('./game');
+require('./reviews');
+
+define(['form', 'game,', 'reviews']);
 
 (function() {
   var game = new window.Game(document.querySelector('.demo'));
