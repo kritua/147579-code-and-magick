@@ -48,7 +48,7 @@ app.
         return;
       }
 
-      res.jsonp(JSON.parse(data));
+      res.reviewsAdd(JSON.parse(data));
     });
   }).
   get('*', serve);
