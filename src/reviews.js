@@ -98,8 +98,8 @@ function getReview(data, container) {
   return elem;
 }
 
-reviews.forEach(function(review, i) {
-  getReview(reviews[i], reviewsList);
+reviews.forEach(function(review) {
+  getReview(review, reviewsList);
 });
 
 reviewsFilter.style.visibility = 'hidden';
