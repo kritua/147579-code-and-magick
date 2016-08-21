@@ -48,14 +48,10 @@ window.reviews = (function() {
 
   function reviewData(data) {
     var reviewsList = document.querySelector('.reviews-list');
-    var documentFragment = document.createDocumentFragment();
 
     data.forEach(function(element) {
-      documentFragment.appendChild(getReview(element));
+      reviewsList.appendChild(getReview(element));
     });
-
-    reviewsList.appendChild(documentFragment);
-
     reviewsFilter.classList.remove('invisible');
   }
 
