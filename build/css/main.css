@@ -274,16 +274,16 @@ input[type=radio]:checked + .reviews-filter-item {
 
 
 .review-rating-two {
-  width: 80px;
+  width: 60px;
 }
 .review-rating-three {
-  width: 120px;
+  width: 90px;
 }
 .review-rating-four {
-  width: 160px;
+  width: 120px;
 }
 .review-rating-five {
-  width: 200px;
+  width: 150px;
 }
 
 .review-author {
@@ -493,12 +493,16 @@ input[type=radio]:checked + .review-mark-label {
 .review-submit {
   margin-right: 20px;
   padding: 0 16px;
-
+  cursor: pointer;
   font: bold 20px "PT Mono";
   line-height: 54px;
 
   background: #ffffff;
   border: 0;
+}
+
+.review-submit:disabled {
+  cursor: default;
 }
 
 .review-fields {

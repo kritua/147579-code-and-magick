@@ -1,4 +1,4 @@
-
+'use strict';
 
 function getReview(data) {
   var authorImage = new Image();

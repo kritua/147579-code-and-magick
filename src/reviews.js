@@ -7,7 +7,7 @@ var reviewsFilter = document.querySelector('.reviews-filter');
 function loadReviews() {
     var apiURL = 'http://localhost:1506/api/reviews';
     reviewsFilter.classList.add('invisible');
-    load(apiURL, reviewData);
+    load(apiURL, getReview);
 }
 
 

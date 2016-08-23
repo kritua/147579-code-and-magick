@@ -13,7 +13,7 @@ var reviewData = require('./reviews');
   formOpenButton.onclick = function(evt) {
     evt.preventDefault();
 
-      form.open(function() {
+    form.open(function() {
       game.setGameStatus(Game.Verdict.PAUSE);
       game.setDeactivated(true);
     });
