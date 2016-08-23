@@ -1,6 +1,5 @@
 'use strict';
 
-window.form = (function() {
   var formContainer = document.querySelector('.overlay-container');
   var formCloseButton = document.querySelector('.review-form-close');
   /* Form Validation Variables */
@@ -104,9 +103,8 @@ window.form = (function() {
     form.close();
   };
 
-  return form;
-})();
 
+module.exports = form;
 
 
 

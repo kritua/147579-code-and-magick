@@ -1,6 +1,5 @@
 'use strict';
 
-window.Game = (function() {
   /**
    * @const
    * @type {number}
@@ -792,5 +791,4 @@ window.Game = (function() {
 
   Game.Verdict = Verdict;
 
-  return Game;
-})();
+module.exports = Game;
