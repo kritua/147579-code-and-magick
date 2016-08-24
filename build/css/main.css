@@ -493,7 +493,6 @@ input[type=radio]:checked + .review-mark-label {
 .review-submit {
   margin-right: 20px;
   padding: 0 16px;
-
   font: bold 20px "PT Mono";
   line-height: 54px;
 
