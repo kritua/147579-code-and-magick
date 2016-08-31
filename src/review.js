@@ -1,55 +1,75 @@
 'use strict';
 
 var reviewsTemplate = document.querySelector('#review-template');
+var cloneElem;
+
+if ('content' in reviewsTemplate) {
+  cloneElem = reviewsTemplate.content.querySelector('.review');
+} else {
+  cloneElem = reviewsTemplate.querySelector('.review');
+}
+
+var Review = function(data) {
+  this.data = data;
+
+  this.IMAGE_SIZE = '124px';
+  this.LOAD_FAIL = 'review-load-failure';
+  this.IMAGE_LOAD_TIMEOUT = 10000;
+  this.ACTIVE_ANSWER = 'review-quiz-answer-active';
 
 
-function getReview(data) {
-  var imageLoadTimeout;
-  var cloneElem;
-  var IMAGE_SIZE = 124;
-  var IMAGE_LOAD_TIMEOUT = 10000;
 
-  if ('content' in reviewsTemplate) {
-    cloneElem = reviewsTemplate.content.querySelector('.review');
-  } else {
-    cloneElem = reviewsTemplate.querySelector('.review');
-  }
 
-  var elem = cloneElem.cloneNode(true);
-  var desc = elem.querySelector('.review-text');
-  var rate = elem.querySelector('.review-rating');
-  var author = elem.querySelector('.review-author');
-  var authorImage = new Image(IMAGE_SIZE, IMAGE_SIZE);
+};
 
-  authorImage.onload = function() {
-    clearTimeout(imageLoadTimeout);
-    authorImage.classList.add('review-author');
-    elem.replaceChild(authorImage, author);
-  };
 
-  authorImage.onerror = function() {
-    elem.classList.add('review-load-failure');
-  };
+Review.prototype.getElement = function() {
+  this.elem = cloneElem.cloneNode(true);
+  this.desc = this.elem.querySelector('.review-text');
+  this.rate = this.elem.querySelector('.review-rating');
+  this.author = this.elem.querySelector('.review-author');
 
-  imageLoadTimeout = setTimeout(function() {
-    authorImage.src = '';
-    elem.classList.add('review-load-failure');
-  }, IMAGE_LOAD_TIMEOUT);
+  this.answerNo = this.elem.querySelector('.review-quiz-answer-no');
+  this.answerYes = this.elem.querySelector('.review-quiz-answer-yes');
+};
 
+
+Review.prototype.rating = function() {
   var rating = {
     2: 'two',
     3: 'three',
     4: 'four',
     5: 'five'
   };
-  if (rating[data.rating]) {
-    rate.classList.add('review-rating-' + rating[data.rating]);
+  if (rating[this.data.rating]) {
+    this.rate.classList.add('review-rating-' + rating[this.data.rating]);
   }
-  desc.textContent = data.description;
-  authorImage.src = data.author.picture;
+};
 
-  return elem;
-}
+Review.prototype.addImage = function() {
+  var self = this;
+  this.imageLoadTimeout = 0;
+  this.authorImage = new Image(this.IMAGE_SIZE, this.IMAGE_SIZE);
 
+  this.authorImage.onload = function() {
+    clearTimeout(self.imageLoadTimeout);
+    self.authorImage.classList.add('review-author');
+    self.elem.replaceChild(self.authorImage, self.author);
+  };
 
-module.exports = getReview;
+  this.authorImage.onerror = function() {
+    self.elem.classList.add(this.LOAD_FAIL);
+  };
+
+  this.imageLoadTimeout = setTimeout(function() {
+    self.authorImage.src = '';
+    self.elem.classList.add(this.LOAD_FAIL);
+  }, self.IMAGE_LOAD_TIMEOUT);
+
+};
+
+Review.prototype.usefulAnswer = function() {
+  
+};
+
+module.exports = Review;
