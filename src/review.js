@@ -16,9 +16,11 @@ var Review = function(data) {
   this.LOAD_FAIL = 'review-load-failure';
   this.IMAGE_LOAD_TIMEOUT = 10000;
   this.ACTIVE_ANSWER = 'review-quiz-answer-active';
-
-
-
+  
+  this.getElement();
+  this.desc.textContent = this.data.description;
+  this.addImage();
+  this.rating(this.data.rating);
 
 };
 
@@ -47,25 +49,37 @@ Review.prototype.rating = function() {
 };
 
 Review.prototype.addImage = function() {
-  var self = this;
-  this.imageLoadTimeout = 0;
-  this.authorImage = new Image(this.IMAGE_SIZE, this.IMAGE_SIZE);
 
-  this.authorImage.onload = function() {
-    clearTimeout(self.imageLoadTimeout);
-    self.authorImage.classList.add('review-author');
-    self.elem.replaceChild(self.authorImage, self.author);
-  };
+  function loadImage(imageURL, callback) {
+    var imageLoadTimeout = 0;
+    var authorImage = new Image(this.IMAGE_SIZE, this.IMAGE_SIZE);
 
-  this.authorImage.onerror = function() {
-    self.elem.classList.add(this.LOAD_FAIL);
-  };
+    authorImage.onload = function () {
+      clearTimeout(self.imageLoadTimeout);
+      authorImage.classList.add('review-author');
+      this.elem.replaceChild(self.authorImage, author);
+      callback(true);
+    };
 
-  this.imageLoadTimeout = setTimeout(function() {
-    self.authorImage.src = '';
-    self.elem.classList.add(this.LOAD_FAIL);
-  }, self.IMAGE_LOAD_TIMEOUT);
+    this.authorImage.onerror = function () {
+      self.elem.classList.add(self.LOAD_FAIL);
+      callback(false);
+    };
 
+    this.imageLoadTimeout = setTimeout(function () {
+      self.authorImage.src = imageURL;
+      self.elem.classList.add(self.LOAD_FAIL);
+    }, self.IMAGE_LOAD_TIMEOUT);
+  }
+  function isLoaded(loaded) {
+    if (loaded) {
+      this.authorImage.src = data.author.picture;
+    } else {
+      this.authorImage.src = '';
+      this.elem.classList.add(this.LOAD_FAIL);
+    }
+  }
+  loadImage(this.data.author.picture, isLoaded.bind(this));
 };
 
 Review.prototype.usefulAnswer = function() {
