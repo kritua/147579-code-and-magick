@@ -1,21 +1,36 @@
 'use strict';
 
-var Gallery = function(pictures) {
+var Gallery = function(picturesGallery) {
   this.overlayGallery = document.querySelector('.overlay-gallery');
   this.leftControl = document.querySelector('.overlay-gallery-control-left');
   this.rightControl = document.querySelector('.overlay-gallery-control-right');
   this.closeGallery = document.querySelector('.overlay-gallery-close');
   this.currentSlide = document.querySelector('.preview-number-current');
   this.previewSlide = document.querySelector('.overlay-gallery-preview');
+  this.total = document.querySelector('.preview-number-total');
+
+  this.photogallery = document.querySelector(picturesGallery);
 
   this.nextSlide = this.nextPicture.bind(this);
   this.prevSlide = this.prevPicture.bind(this);
   this.hideGallery = this.hide.bind(this);
-
-  this.pictures = pictures;
+  this.pictures = [];
   this.activePicture = 0;
   this.currentPicture = null;
 };
+
+Gallery.prototype.initialize = function() {
+  var self = this;
+  var picturesLink = this.photogallery.querySelectorAll('.photogallery-image');
+  Array.prototype.forEach.call(picturesLink, function(item, i) {
+    item.onclick = function() {
+      self.show(i);
+    };
+    var image = item.querySelector('img');
+    self.pictures.push(image.src);
+  });
+  this.total.textContent = this.pictures.length;
+}
 
 /*
  Открываем галерею
@@ -68,7 +83,8 @@ Gallery.prototype.nextPicture = function() {
  Предыдущая картинка
  */
 Gallery.prototype.prevPicture = function() {
-  if (this.activePicture - 1 >= this.pictures.length) {
+  // не this.pictures.length , а больше 0
+  if (this.activePicture - 1 >= 0) {
     this.setActivePicture(this.activePicture - 1);
   }
 };

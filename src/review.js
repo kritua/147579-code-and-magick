@@ -14,16 +14,17 @@ var Review = function(data) {
 
   this.IMAGE_SIZE = '124px';
   this.LOAD_FAIL = 'review-load-failure';
-  this.IMAGE_LOAD_TIMEOUT = 10000;
   this.ACTIVE_ANSWER = 'review-quiz-answer-active';
+
   
   this.getElement();
   this.desc.textContent = this.data.description;
-  this.addImage();
   this.rating(this.data.rating);
+  this.addImage();
 
 };
 
+Review.prototype.IMAGE_SIZE = '124px';
 
 Review.prototype.getElement = function() {
   this.elem = cloneElem.cloneNode(true);
@@ -49,41 +50,44 @@ Review.prototype.rating = function() {
 };
 
 Review.prototype.addImage = function() {
-
+  var self = this;
   function loadImage(imageURL, callback) {
-    var imageLoadTimeout = 0;
-    var authorImage = new Image(this.IMAGE_SIZE, this.IMAGE_SIZE);
+    var authorImage = new Image();
+    var imageLoadTimeout = null;
+    var IMAGE_LOAD_TIMEOUT = 10000;
 
     authorImage.onload = function () {
-      clearTimeout(self.imageLoadTimeout);
-      authorImage.classList.add('review-author');
-      this.elem.replaceChild(self.authorImage, author);
+      clearTimeout(imageLoadTimeout);
       callback(true);
     };
 
-    this.authorImage.onerror = function () {
-      self.elem.classList.add(self.LOAD_FAIL);
+    authorImage.onerror = function () {
+      clearTimeout(imageLoadTimeout);
       callback(false);
     };
 
-    this.imageLoadTimeout = setTimeout(function () {
-      self.authorImage.src = imageURL;
-      self.elem.classList.add(self.LOAD_FAIL);
-    }, self.IMAGE_LOAD_TIMEOUT);
+    authorImage.src = imageURL;
+
+    imageLoadTimeout = setTimeout(function () {
+      clearTimeout(imageLoadTimeout);
+      callback(false);
+    }, IMAGE_LOAD_TIMEOUT);
   }
+
   function isLoaded(loaded) {
     if (loaded) {
-      this.authorImage.src = data.author.picture;
+      this.author.src = self.data.author.picture;
+      this.author.width = this.author.height = this.IMAGE_SIZE;
     } else {
-      this.authorImage.src = '';
-      this.elem.classList.add(this.LOAD_FAIL);
+      this.author.src = '';
+      this.author.classList.add(this.LOAD_FAIL);
     }
   }
   loadImage(this.data.author.picture, isLoaded.bind(this));
 };
 
-Review.prototype.usefulAnswer = function() {
+/* Review.prototype.usefulAnswer = function() {
   
-};
+}; */
 
 module.exports = Review;
