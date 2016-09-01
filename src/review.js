@@ -11,20 +11,21 @@ if ('content' in reviewsTemplate) {
 
 var Review = function(data) {
   this.data = data;
-
-  this.IMAGE_SIZE = '124px';
-  this.LOAD_FAIL = 'review-load-failure';
-  this.ACTIVE_ANSWER = 'review-quiz-answer-active';
-
   
   this.getElement();
+
+  this.isAnswerYes = this.usefulAnswer.bind(this, true);
+  this.isAnswerNo = this.usefulAnswer.bind(this, false);
+
   this.desc.textContent = this.data.description;
   this.rating(this.data.rating);
   this.addImage();
 
+  this.answerYes.addEventListener('click', this.isAnswerYes);
+  this.answerNo.addEventListener('click', this.isAnswerNo);
+
 };
 
-Review.prototype.IMAGE_SIZE = '124px';
 
 Review.prototype.getElement = function() {
   this.elem = cloneElem.cloneNode(true);
@@ -52,9 +53,12 @@ Review.prototype.rating = function() {
 Review.prototype.addImage = function() {
   var self = this;
   function loadImage(imageURL, callback) {
-    var authorImage = new Image();
-    var imageLoadTimeout = null;
+    var IMAGE_SIZE = '124px';
     var IMAGE_LOAD_TIMEOUT = 10000;
+    var authorImage = new Image(IMAGE_SIZE, IMAGE_SIZE);
+    var imageLoadTimeout = null;
+   
+    
 
     authorImage.onload = function () {
       clearTimeout(imageLoadTimeout);
@@ -77,17 +81,17 @@ Review.prototype.addImage = function() {
   function isLoaded(loaded) {
     if (loaded) {
       this.author.src = self.data.author.picture;
-      this.author.width = this.author.height = this.IMAGE_SIZE;
     } else {
       this.author.src = '';
-      this.author.classList.add(this.LOAD_FAIL);
+      this.elem.classList.add('review-load-failure');
     }
   }
   loadImage(this.data.author.picture, isLoaded.bind(this));
 };
 
-/* Review.prototype.usefulAnswer = function() {
-  
-}; */
+Review.prototype.usefulAnswer = function() {
+  this.isAnswerYes = '';
+  this.ACTIVE_ANSWER = 'review-quiz-answer-active';
+};
 
 module.exports = Review;

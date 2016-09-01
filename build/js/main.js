@@ -1212,11 +1212,8 @@
 	
 	var Review = function(data) {
 	  this.data = data;
-	
-	  this.IMAGE_SIZE = '124px';
-	  this.LOAD_FAIL = 'review-load-failure';
+	  
 	  this.ACTIVE_ANSWER = 'review-quiz-answer-active';
-	
 	  
 	  this.getElement();
 	  this.desc.textContent = this.data.description;
@@ -1225,7 +1222,6 @@
 	
 	};
 	
-	Review.prototype.IMAGE_SIZE = '124px';
 	
 	Review.prototype.getElement = function() {
 	  this.elem = cloneElem.cloneNode(true);
@@ -1253,9 +1249,12 @@
 	Review.prototype.addImage = function() {
 	  var self = this;
 	  function loadImage(imageURL, callback) {
-	    var authorImage = new Image();
-	    var imageLoadTimeout = null;
+	    var IMAGE_SIZE = '124px';
 	    var IMAGE_LOAD_TIMEOUT = 10000;
+	    var authorImage = new Image(IMAGE_SIZE, IMAGE_SIZE);
+	    var imageLoadTimeout = null;
+	   
+	    
 	
 	    authorImage.onload = function () {
 	      clearTimeout(imageLoadTimeout);
@@ -1278,10 +1277,9 @@
 	  function isLoaded(loaded) {
 	    if (loaded) {
 	      this.author.src = self.data.author.picture;
-	      this.author.width = this.author.height = this.IMAGE_SIZE;
 	    } else {
 	      this.author.src = '';
-	      this.author.classList.add(this.LOAD_FAIL);
+	      this.elem.classList.add('review-load-failure');
 	    }
 	  }
 	  loadImage(this.data.author.picture, isLoaded.bind(this));
