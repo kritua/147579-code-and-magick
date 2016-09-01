@@ -33,18 +33,9 @@ game.setGameStatus(Game.Verdict.INTRO);
 reviewsLoad(apiURL, reviewData);
 
 
-var pictures = [];
+var gallery = new Gallery('.photogallery');
+gallery.initialize();
 
-var picturesArray = Array.prototype.slice.call(picturesAll);
-for (var y = 0; y < picturesArray.length; y++) {
-  pictures[y] = picturesArray[y].src;
-}
-
-var gallery = new Gallery(pictures);
-
-Array.prototype.forEach.call(picturesLink, function(item, i) {
-  item.addEventListener('click', gallery.show.bind(gallery, i));
-});
 
 
 
