@@ -1106,7 +1106,7 @@
 	    self.pictures.push(image.src);
 	  });
 	  this.total.textContent = this.pictures.length;
-	}
+	};
 	
 	/*
 	 Открываем галерею
@@ -1212,13 +1212,18 @@
 	
 	var Review = function(data) {
 	  this.data = data;
-	  
-	  this.ACTIVE_ANSWER = 'review-quiz-answer-active';
-	  
+	
 	  this.getElement();
+	
+	  this.isAnswerYes = this.usefulAnswer.bind(this, true);
+	  this.isAnswerNo = this.usefulAnswer.bind(this, false);
+	
 	  this.desc.textContent = this.data.description;
 	  this.rating(this.data.rating);
 	  this.addImage();
+	
+	  this.answerYes.addEventListener('click', this.isAnswerYes);
+	  this.answerNo.addEventListener('click', this.isAnswerNo);
 	
 	};
 	
@@ -1253,22 +1258,20 @@
 	    var IMAGE_LOAD_TIMEOUT = 10000;
 	    var authorImage = new Image(IMAGE_SIZE, IMAGE_SIZE);
 	    var imageLoadTimeout = null;
-	   
-	    
 	
-	    authorImage.onload = function () {
+	    authorImage.onload = function() {
 	      clearTimeout(imageLoadTimeout);
 	      callback(true);
 	    };
 	
-	    authorImage.onerror = function () {
+	    authorImage.onerror = function() {
 	      clearTimeout(imageLoadTimeout);
 	      callback(false);
 	    };
 	
 	    authorImage.src = imageURL;
 	
-	    imageLoadTimeout = setTimeout(function () {
+	    imageLoadTimeout = setTimeout(function() {
 	      clearTimeout(imageLoadTimeout);
 	      callback(false);
 	    }, IMAGE_LOAD_TIMEOUT);
@@ -1285,9 +1288,15 @@
 	  loadImage(this.data.author.picture, isLoaded.bind(this));
 	};
 	
-	/* Review.prototype.usefulAnswer = function() {
-	  
-	}; */
+	Review.prototype.remove = function() {
+	  this.answerYes.removeEventListener('click', this.isAnswerYes);
+	  this.answerNo.removeEventListener('click', this.isAnswerNo);
+	};
+	
+	Review.prototype.usefulAnswer = function(useful) {
+	  this.answerYes.classList.toggle('review-quiz-answer-active', useful);
+	  this.answerNo.classList.toggle('review-quiz-answer-active', !useful);
+	};
 	
 	module.exports = Review;
 

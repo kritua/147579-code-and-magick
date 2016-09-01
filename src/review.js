@@ -11,7 +11,7 @@ if ('content' in reviewsTemplate) {
 
 var Review = function(data) {
   this.data = data;
-  
+
   this.getElement();
 
   this.isAnswerYes = this.usefulAnswer.bind(this, true);
@@ -57,22 +57,20 @@ Review.prototype.addImage = function() {
     var IMAGE_LOAD_TIMEOUT = 10000;
     var authorImage = new Image(IMAGE_SIZE, IMAGE_SIZE);
     var imageLoadTimeout = null;
-   
-    
 
-    authorImage.onload = function () {
+    authorImage.onload = function() {
       clearTimeout(imageLoadTimeout);
       callback(true);
     };
 
-    authorImage.onerror = function () {
+    authorImage.onerror = function() {
       clearTimeout(imageLoadTimeout);
       callback(false);
     };
 
     authorImage.src = imageURL;
 
-    imageLoadTimeout = setTimeout(function () {
+    imageLoadTimeout = setTimeout(function() {
       clearTimeout(imageLoadTimeout);
       callback(false);
     }, IMAGE_LOAD_TIMEOUT);
@@ -89,9 +87,14 @@ Review.prototype.addImage = function() {
   loadImage(this.data.author.picture, isLoaded.bind(this));
 };
 
-Review.prototype.usefulAnswer = function() {
-  this.isAnswerYes = '';
-  this.ACTIVE_ANSWER = 'review-quiz-answer-active';
+Review.prototype.remove = function() {
+  this.answerYes.removeEventListener('click', this.isAnswerYes);
+  this.answerNo.removeEventListener('click', this.isAnswerNo);
+};
+
+Review.prototype.usefulAnswer = function(useful) {
+  this.answerYes.classList.toggle('review-quiz-answer-active', useful);
+  this.answerNo.classList.toggle('review-quiz-answer-active', !useful);
 };
 
 module.exports = Review;
