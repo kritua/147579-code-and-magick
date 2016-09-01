@@ -30,7 +30,7 @@ Gallery.prototype.initialize = function() {
     self.pictures.push(image.src);
   });
   this.total.textContent = this.pictures.length;
-}
+};
 
 /*
  Открываем галерею
