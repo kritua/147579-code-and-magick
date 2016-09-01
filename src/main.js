@@ -8,9 +8,6 @@ var reviewData = require('./reviews');
 var reviewsLoad = require('./load');
 var apiURL = 'http://localhost:1506/api/reviews';
 
-var picturesLink = document.querySelectorAll('.photogallery-image');
-var picturesAll = document.querySelectorAll('.photogallery-image img');
-
 var game = new Game(document.querySelector('.demo'));
 var formOpenButton = document.querySelector('.reviews-controls-new');
 
