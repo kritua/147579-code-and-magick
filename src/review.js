@@ -12,22 +12,6 @@ if ('content' in reviewsTemplate) {
 var Review = function(data) {
   this.data = data;
 
-  this.getElement();
-
-  this.isAnswerYes = this.usefulAnswer.bind(this, true);
-  this.isAnswerNo = this.usefulAnswer.bind(this, false);
-
-  this.desc.textContent = this.data.description;
-  this.rating(this.data.rating);
-  this.addImage();
-
-  this.answerYes.addEventListener('click', this.isAnswerYes);
-  this.answerNo.addEventListener('click', this.isAnswerNo);
-
-};
-
-
-Review.prototype.getElement = function() {
   this.elem = cloneElem.cloneNode(true);
   this.desc = this.elem.querySelector('.review-text');
   this.rate = this.elem.querySelector('.review-rating');
@@ -35,6 +19,22 @@ Review.prototype.getElement = function() {
 
   this.answerNo = this.elem.querySelector('.review-quiz-answer-no');
   this.answerYes = this.elem.querySelector('.review-quiz-answer-yes');
+
+  this.isAnswerYes = this.usefulAnswer.bind(this, true);
+  this.isAnswerNo = this.usefulAnswer.bind(this, false);
+
+  this.init();
+};
+
+
+Review.prototype.init = function() {
+  this.rating(this.data.rating);
+  this.addImage();
+
+  this.desc.textContent = this.data.description;
+
+  this.answerYes.addEventListener('click', this.isAnswerYes);
+  this.answerNo.addEventListener('click', this.isAnswerNo);
 };
 
 
