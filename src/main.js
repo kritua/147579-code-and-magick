@@ -29,6 +29,11 @@ game.setGameStatus(Game.Verdict.INTRO);
 
 reviewsLoad(apiURL, reviewData);
 
+
 var gallery = new Gallery('.photogallery');
 gallery.initialize();
+
+
+
+
 
