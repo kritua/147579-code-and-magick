@@ -1,29 +1,19 @@
 'use strict';
 
-window.CallBackRegistry = {};
+function reviewsLoad(url, object, callback) {
+  var xhr = new XMLHttpRequest();
 
-/**
- * JSONP запрос
- * @param {string} link адрес
- * @param {function} callback callback-функция
- */
-
-function reviewsLoad(link, callback) {
-  var callbackVar = 'callback' + String(Math.random()).slice(-6);
-  var script = document.createElement('script');
-
-  link = link + '?callback=CallBackRegistry.' + callbackVar;
-  window.CallBackRegistry[callbackVar] = function(data) {
-    callback(data);
+  xhr.onload = function(event) {
+    try {
+      var loadData = JSON.parse(event.target.response);
+      callback(loadData);
+    } catch(err) {
+      console.log(err.message);
+    }
   };
 
-  script.onload = script.onerror = function() {
-    delete window.CallBackRegistry[callbackVar];
-    document.body.removeChild(script);
-  };
-
-  script.src = link;
-  document.body.appendChild(script);
+  xhr.open('GET', url + '?from=' + object.from + '&to=' + object.to + '&filter=' + object.filter);
+  xhr.send();
 }
 
 module.exports = reviewsLoad;
