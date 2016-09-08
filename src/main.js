@@ -1,27 +1,39 @@
 'use strict';
 
 
-require('./form');
-require('./game');
+var form = require('./form');
+var Game = require('./game');
+var Gallery = require('./gallery');
+var reviewData = require('./reviews');
+var reviewsLoad = require('./load');
+var apiURL = 'http://localhost:1506/api/reviews';
 
-(function() {
-  var game = new window.Game(document.querySelector('.demo'));
-  game.initializeLevelAndStart();
-  game.setGameStatus(window.Game.Verdict.INTRO);
+var game = new Game(document.querySelector('.demo'));
+var formOpenButton = document.querySelector('.reviews-controls-new');
 
-  var formOpenButton = document.querySelector('.reviews-controls-new');
+/** @param {MouseEvent} evt */
+formOpenButton.onclick = function(evt) {
+  evt.preventDefault();
+  form.open(function() {
+    game.setGameStatus(Game.Verdict.PAUSE);
+    game.setDeactivated(true);
+  });
+};
 
-  /** @param {MouseEvent} evt */
-  formOpenButton.onclick = function(evt) {
-    evt.preventDefault();
+form.onClose = function() {
+  game.setDeactivated(false);
+};
 
-    window.form.open(function() {
-      game.setGameStatus(window.Game.Verdict.PAUSE);
-      game.setDeactivated(true);
-    });
-  };
+game.initializeLevelAndStart();
+game.setGameStatus(Game.Verdict.INTRO);
 
-  window.form.onClose = function() {
-    game.setDeactivated(false);
-  };
-})();
+reviewsLoad(apiURL, reviewData);
+
+
+var gallery = new Gallery('.photogallery');
+gallery.initialize();
+
+
+
+
+
