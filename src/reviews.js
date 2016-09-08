@@ -59,7 +59,7 @@ function insertReview(data) {
   loadingData = false;
 }
 
-function filteringReviews(event, filterID) {
+function filteringReviews(event) {
   event.preventDefault();
   checkedReview = event.target.value;
   reviewsList.innerHTML = '';
