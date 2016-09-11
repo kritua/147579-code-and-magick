@@ -12,6 +12,13 @@ var HEIGHT = 300;
  */
 var WIDTH = 700;
 
+
+var THROTTLE_TIMEOUT = 100;
+
+var clouds = document.querySelector('.header-clouds');
+var demo = document.querySelector('.demo');
+var renew = null;
+
 /**
  * ID уровней.
  * @enum {number}
@@ -255,6 +262,7 @@ var Game = function(container) {
   this._onKeyDown = this._onKeyDown.bind(this);
   this._onKeyUp = this._onKeyUp.bind(this);
   this._pauseListener = this._pauseListener.bind(this);
+  this._cloudsParallax = this._cloudsParallax.bind(this);
 
   this.setDeactivated(false);
 };
@@ -776,16 +784,31 @@ Game.prototype = {
     }
   },
 
+  _cloudsParallax: function() {
+
+    if (clouds.getBoundingClientRect().bottom > 0) {
+      clouds.style.backgroundPosition = (50 - window.pageYOffset * 0.2) + '% 0';
+    }
+    if (Date.now() - renew > THROTTLE_TIMEOUT && this.state.currentStatus !== Game.Verdict.PAUSE) {
+      if (demo.getBoundingClientRect().bottom < 0) {
+        this.setGameStatus(Game.Verdict.PAUSE);
+      }
+    }
+    renew = Date.now();
+  },
+
   /** @private */
   _initializeGameListeners: function() {
     window.addEventListener('keydown', this._onKeyDown);
     window.addEventListener('keyup', this._onKeyUp);
+    window.addEventListener('scroll', this._cloudsParallax);
   },
 
   /** @private */
   _removeGameListeners: function() {
     window.removeEventListener('keydown', this._onKeyDown);
     window.removeEventListener('keyup', this._onKeyUp);
+    window.removeEventListener('scroll', this._cloudsParallax);
   }
 };
 
