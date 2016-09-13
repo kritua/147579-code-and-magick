@@ -17,7 +17,6 @@ var THROTTLE_TIMEOUT = 100;
 
 var clouds = document.querySelector('.header-clouds');
 var demo = document.querySelector('.demo');
-var renew = null;
 
 /**
  * ID уровней.
@@ -785,16 +784,23 @@ Game.prototype = {
   },
 
   _cloudsParallax: function() {
+    var cloudsBottom = clouds.getBoundingClientRect().bottom;
+    var demoBottom = demo.getBoundingClientRect().bottom;
+    var pauseGame = Game.Verdict.PAUSE;
+    var statusGame = this.state.currentStatus;
+    var cloudOffset = -window.pageYOffset / 10 + '%';
+    var gameStatus = this.setGameStatus.bind(this);
 
-    if (clouds.getBoundingClientRect().bottom > 0) {
-      clouds.style.backgroundPosition = (50 - window.pageYOffset * 0.2) + '% 0';
+    if (cloudsBottom > 0) {
+      clouds.style.backgroundPosition = cloudOffset;
     }
-    if (Date.now() - renew > THROTTLE_TIMEOUT && this.state.currentStatus !== Game.Verdict.PAUSE) {
-      if (demo.getBoundingClientRect().bottom < 0) {
-        this.setGameStatus(Game.Verdict.PAUSE);
+
+    var TIMER = setTimeout(function() {
+      clearTimeout(TIMER);
+      if (statusGame !== pauseGame && demoBottom < 0) {
+        gameStatus(pauseGame);
       }
-    }
-    renew = Date.now();
+    }, THROTTLE_TIMEOUT);
   },
 
   /** @private */
