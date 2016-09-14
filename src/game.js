@@ -784,21 +784,19 @@ Game.prototype = {
   },
 
   _cloudsParallax: function() {
-    var cloudsBottom = clouds.getBoundingClientRect().bottom;
-    var demoBottom = demo.getBoundingClientRect().bottom;
-    var pauseGame = Game.Verdict.PAUSE;
-    var statusGame = this.state.currentStatus;
+    var isCloudsInViewport = clouds.getBoundingClientRect().bottom > 0;
+    var isGameWindowVisible = demo.getBoundingClientRect().bottom < 0;
+    var isGamePaused = this.state.currentStatus === Game.Verdict.PAUSE;
     var cloudOffset = -window.pageYOffset / 10 + '%';
-    var gameStatus = this.setGameStatus.bind(this);
-
-    if (cloudsBottom > 0) {
-      clouds.style.backgroundPosition = cloudOffset;
-    }
+    var self = this;
 
     var TIMER = setTimeout(function() {
       clearTimeout(TIMER);
-      if (statusGame !== pauseGame && demoBottom < 0) {
-        gameStatus(pauseGame);
+      if (isCloudsInViewport) {
+        clouds.style.backgroundPosition = cloudOffset;
+      }
+      if (!isGamePaused && isGameWindowVisible) {
+        self.setGameStatus(Game.Verdict.PAUSE);
       }
     }, THROTTLE_TIMEOUT);
   },
