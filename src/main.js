@@ -5,8 +5,6 @@ var form = require('./form');
 var Game = require('./game');
 var Gallery = require('./gallery');
 var reviewData = require('./reviews');
-var reviewsLoad = require('./load');
-var apiURL = 'http://localhost:1506/api/reviews';
 
 var game = new Game(document.querySelector('.demo'));
 var formOpenButton = document.querySelector('.reviews-controls-new');
@@ -27,13 +25,7 @@ form.onClose = function() {
 game.initializeLevelAndStart();
 game.setGameStatus(Game.Verdict.INTRO);
 
-reviewsLoad(apiURL, reviewData);
-
+reviewData();
 
 var gallery = new Gallery('.photogallery');
 gallery.initialize();
-
-
-
-
-

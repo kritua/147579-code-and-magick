@@ -12,6 +12,12 @@ var HEIGHT = 300;
  */
 var WIDTH = 700;
 
+
+var THROTTLE_TIMEOUT = 100;
+
+var clouds = document.querySelector('.header-clouds');
+var demo = document.querySelector('.demo');
+
 /**
  * ID уровней.
  * @enum {number}
@@ -255,6 +261,7 @@ var Game = function(container) {
   this._onKeyDown = this._onKeyDown.bind(this);
   this._onKeyUp = this._onKeyUp.bind(this);
   this._pauseListener = this._pauseListener.bind(this);
+  this._cloudsParallax = this._cloudsParallax.bind(this);
 
   this.setDeactivated(false);
 };
@@ -776,16 +783,36 @@ Game.prototype = {
     }
   },
 
+  _cloudsParallax: function() {
+    var isCloudsInViewport = clouds.getBoundingClientRect().bottom > 0;
+    var isGameWindowVisible = demo.getBoundingClientRect().bottom < 0;
+    var isGamePaused = this.state.currentStatus === Game.Verdict.PAUSE;
+    var cloudOffset = -window.pageYOffset / 10 + '%';
+    var self = this;
+
+    var TIMER = setTimeout(function() {
+      clearTimeout(TIMER);
+      if (isCloudsInViewport) {
+        clouds.style.backgroundPosition = cloudOffset;
+      }
+      if (!isGamePaused && isGameWindowVisible) {
+        self.setGameStatus(Game.Verdict.PAUSE);
+      }
+    }, THROTTLE_TIMEOUT);
+  },
+
   /** @private */
   _initializeGameListeners: function() {
     window.addEventListener('keydown', this._onKeyDown);
     window.addEventListener('keyup', this._onKeyUp);
+    window.addEventListener('scroll', this._cloudsParallax);
   },
 
   /** @private */
   _removeGameListeners: function() {
     window.removeEventListener('keydown', this._onKeyDown);
     window.removeEventListener('keyup', this._onKeyUp);
+    window.removeEventListener('scroll', this._cloudsParallax);
   }
 };
 
