@@ -8,6 +8,12 @@ var reviewsFilter = document.querySelector('.reviews-filter');
 var reviewsList = document.querySelector('.reviews-list');
 var reviewsMore = document.querySelector('.reviews-controls-more');
 
+//фильтр
+var filterAdd = document.querySelector('#' + loadFilter());
+if (filterAdd) {
+  filterAdd.checked = true;
+}
+
 //Технические переменные
 var reviews = [];
 var checkedReview = null;
@@ -42,7 +48,6 @@ function addNextReview() {
     reviewsLoad(REVIEW_SRC, reviewFromTo, insertReview);
     loadingData = true;
   }
-
 }
 
 //Функция вставки отзывов на страницу
@@ -63,10 +68,19 @@ function filteringReviews(event) {
   event.preventDefault();
   checkedReview = event.target.value;
   reviewsList.innerHTML = '';
-
+  saveFilter(checkedReview);
   pageNumber = 0;
   addNextReview();
 }
+
+function saveFilter(filter) {
+  localStorage.setItem('filter', filter);
+}
+
+function loadFilter() {
+  return localStorage.getItem('filter');
+}
+
 
 //Событие для добавления отзывов
 reviewsFilter.addEventListener('change', filteringReviews, true);
