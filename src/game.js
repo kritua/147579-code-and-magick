@@ -261,6 +261,7 @@ var Game = function(container) {
   this._onKeyDown = this._onKeyDown.bind(this);
   this._onKeyUp = this._onKeyUp.bind(this);
   this._pauseListener = this._pauseListener.bind(this);
+  this.gameVisible = this.throttle(this.gameVisible.bind(this), THROTTLE_TIMEOUT);
   this._cloudsParallax = this._cloudsParallax.bind(this);
 
   this.setDeactivated(false);
@@ -785,20 +786,31 @@ Game.prototype = {
 
   _cloudsParallax: function() {
     var isCloudsInViewport = clouds.getBoundingClientRect().bottom > 0;
+    var cloudOffset = -window.pageYOffset / 10 + '%';
+
+    if (isCloudsInViewport) {
+      clouds.style.backgroundPosition = cloudOffset;
+    }
+
+    
+  },
+  
+  gameVisible: function() {
     var isGameWindowVisible = demo.getBoundingClientRect().bottom < 0;
     var isGamePaused = this.state.currentStatus === Game.Verdict.PAUSE;
-    var cloudOffset = -window.pageYOffset / 10 + '%';
-    var self = this;
+    if (!isGamePaused && isGameWindowVisible) {
+      this.setGameStatus(Game.Verdict.PAUSE);
+    }
+  },
 
-    var TIMER = setTimeout(function() {
-      clearTimeout(TIMER);
-      if (isCloudsInViewport) {
-        clouds.style.backgroundPosition = cloudOffset;
+  throttle: function(func, timeout) {
+    var funcCall = null;
+    return function() {
+      if (new Date() - funcCall > timeout) {
+        func();
+        funcCall = new Date();
       }
-      if (!isGamePaused && isGameWindowVisible) {
-        self.setGameStatus(Game.Verdict.PAUSE);
-      }
-    }, THROTTLE_TIMEOUT);
+    }
   },
 
   /** @private */
@@ -806,6 +818,7 @@ Game.prototype = {
     window.addEventListener('keydown', this._onKeyDown);
     window.addEventListener('keyup', this._onKeyUp);
     window.addEventListener('scroll', this._cloudsParallax);
+    window.addEventListener('scroll', this.gameVisible);
   },
 
   /** @private */
@@ -813,6 +826,7 @@ Game.prototype = {
     window.removeEventListener('keydown', this._onKeyDown);
     window.removeEventListener('keyup', this._onKeyUp);
     window.removeEventListener('scroll', this._cloudsParallax);
+    window.removeEventListener('scroll', this.gameVisible);
   }
 };
 
