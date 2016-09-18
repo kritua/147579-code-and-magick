@@ -791,10 +791,8 @@ Game.prototype = {
     if (isCloudsInViewport) {
       clouds.style.backgroundPosition = cloudOffset;
     }
-
-    
   },
-  
+
   gameVisible: function() {
     var isGameWindowVisible = demo.getBoundingClientRect().bottom < 0;
     var isGamePaused = this.state.currentStatus === Game.Verdict.PAUSE;
@@ -810,7 +808,7 @@ Game.prototype = {
         func();
         funcCall = new Date();
       }
-    }
+    };
   },
 
   /** @private */
