@@ -1,5 +1,7 @@
 'use strict';
 
+var throttle = require('./throttle');
+
 /**
  * @const
  * @type {number}
@@ -261,7 +263,7 @@ var Game = function(container) {
   this._onKeyDown = this._onKeyDown.bind(this);
   this._onKeyUp = this._onKeyUp.bind(this);
   this._pauseListener = this._pauseListener.bind(this);
-  this.gameVisible = this.throttle(this.gameVisible.bind(this), THROTTLE_TIMEOUT);
+  this.gameVisible = throttle(this.gameVisible.bind(this), THROTTLE_TIMEOUT);
   this._cloudsParallax = this._cloudsParallax.bind(this);
 
   this.setDeactivated(false);
@@ -799,16 +801,6 @@ Game.prototype = {
     if (!isGamePaused && isGameWindowVisible) {
       this.setGameStatus(Game.Verdict.PAUSE);
     }
-  },
-
-  throttle: function(func, timeout) {
-    var funcCall = null;
-    return function() {
-      if (new Date() - funcCall > timeout) {
-        func();
-        funcCall = new Date();
-      }
-    };
   },
 
   /** @private */
