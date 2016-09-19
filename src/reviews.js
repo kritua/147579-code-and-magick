@@ -23,14 +23,14 @@ var loadingData = false;
 //Константы
 var REVIEW_COUNT = 3;
 var REVIEW_SRC = '/api/reviews';
-
+var DEFAULT_FILTER = document.querySelector('#reviews-all').value;
 
 //Функция загрузки отзывов
 function reviewData() {
   //Скрыть блок отзывов
   reviewsFilter.classList.add('invisible');
   //Селектор выбранного инпута
-  checkedReview = document.querySelector('input[name="reviews"]:checked').value;
+  checkedReview = DEFAULT_FILTER;
   //Текущая страница
   pageNumber = 0;
   //Следующая страница отзывов
