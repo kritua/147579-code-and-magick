@@ -8,11 +8,7 @@ var reviewsFilter = document.querySelector('.reviews-filter');
 var reviewsList = document.querySelector('.reviews-list');
 var reviewsMore = document.querySelector('.reviews-controls-more');
 
-//фильтр
-var filterAdd = document.querySelector('#' + loadFilter());
-if (filterAdd) {
-  filterAdd.checked = true;
-}
+
 
 //Технические переменные
 var reviews = [];
@@ -23,7 +19,13 @@ var loadingData = false;
 //Константы
 var REVIEW_COUNT = 3;
 var REVIEW_SRC = '/api/reviews';
-var DEFAULT_FILTER = document.querySelector('#reviews-all').value;
+var DEFAULT_FILTER = document.querySelector('input[name="reviews"]:checked').value;
+
+//фильтр
+var filterAdd = document.querySelector('#' + loadFilter());
+if (filterAdd) {
+  filterAdd.checked = true;
+}
 
 //Функция загрузки отзывов
 function reviewData() {
@@ -78,9 +80,11 @@ function saveFilter(filter) {
 }
 
 function loadFilter() {
+  if (!localStorage.filter) {
+    localStorage.setItem('filter', DEFAULT_FILTER);
+  }
   return localStorage.getItem('filter');
 }
-
 
 //Событие для добавления отзывов
 reviewsFilter.addEventListener('change', filteringReviews, true);
